@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My wardrobe | WA9Re:</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" type="image/logo" href="images/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Shared base styles ===== */
+/* WA9Re: — shared design tokens & components */
+:root{
+  --ink:#101426; --ink-2:#4a5068; --ink-3:#7c8197;
+  --bg:#eef0f5; --card:#ffffff; --line:#d9dce7;
+  --cobalt:#2f4bff; --cobalt-d:#1f33c4; --lime:#d6f33f; --blush:#ffd9e2; --mint:#cdeee0;
+  --r-s:8px; --r-m:14px; --r-l:26px;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'DM Sans','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);line-height:1.08;letter-spacing:-.02em;font-weight:700}
+h1{font-size:clamp(2.5rem,6vw,4.6rem)} h2{font-size:clamp(1.8rem,3.6vw,2.8rem)} h3{font-size:1.2rem;letter-spacing:-.01em}
+p{max-width:62ch}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px;border-radius:6px}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+.sec{padding:84px 0}
+.muted{color:var(--ink-2)} .small{font-size:.88rem}
+.sr{position:absolute;left:-9999px}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:40;background:rgba(238,240,245,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:20px;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:1.3rem;text-decoration:none;letter-spacing:-.03em}
+.nav{display:flex;gap:4px;margin-left:auto}
+.nav a{padding:9px 16px;border-radius:99px;text-decoration:none;font-weight:600;font-size:.95rem;color:var(--ink-2)}
+.nav a:hover{background:#e0e4f0;color:var(--ink)}
+.nav a[aria-current=page]{background:var(--ink);color:#fff}
+.pts{display:flex;align-items:center;gap:8px;background:var(--lime);padding:7px 14px;border-radius:99px;font-weight:700;font-size:.9rem;white-space:nowrap}
+.pts svg{width:16px;height:16px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;font:600 .95rem var(--body);padding:12px 22px;border-radius:99px;background:var(--cobalt);color:#fff;text-decoration:none;transition:background .15s,transform .1s}
+.btn:hover{background:var(--cobalt-d)} .btn:active{transform:scale(.97)}
+.btn.dark{background:var(--ink)} .btn.dark:hover{background:#262c4a}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)} .btn.ghost:hover{background:var(--ink);color:#fff}
+.btn.lime{background:var(--lime);color:var(--ink)} .btn.lime:hover{background:#c5e32c}
+.btn.sm{padding:8px 15px;font-size:.85rem} .btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* chips & tabs */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:0;cursor:pointer;font:600 .86rem var(--body);padding:8px 15px;border-radius:99px;background:#fff;color:var(--ink-2);box-shadow:inset 0 0 0 1.5px var(--line)}
+.chip:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.chip[aria-pressed=true],.chip.on{background:var(--ink);color:#fff;box-shadow:none}
+.tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin:28px 0}
+.tab{border:0;background:none;cursor:pointer;font:600 1rem var(--body);padding:12px 18px;color:var(--ink-3);position:relative;top:2px;border-bottom:3px solid transparent}
+.tab[aria-selected=true]{color:var(--ink);border-color:var(--cobalt)}
+.tab .n{background:var(--cobalt);color:#fff;border-radius:99px;font-size:.72rem;padding:1px 7px;margin-left:6px}
+
+/* cards & garments */
+.card{background:var(--card);border-radius:var(--r-m);padding:22px}
+.thumb{aspect-ratio:5/6;border-radius:var(--r-s);background:linear-gradient(160deg,#f6f7fb,#e7eaf3);display:grid;place-items:center;overflow:hidden}
+.thumb svg,.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb svg{padding:8%;object-fit:contain}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px}
+.item{background:var(--card);border-radius:var(--r-m);padding:10px;display:flex;flex-direction:column;gap:10px;position:relative}
+.item .meta{padding:0 6px}
+.item h3{font-size:1rem;line-height:1.25}
+.item .sub{font-size:.82rem;color:var(--ink-3)}
+.item .acts{display:flex;gap:6px;padding:0 6px 6px;margin-top:auto;flex-wrap:wrap}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--mint);color:#17503b}
+.tag.pink{background:var(--blush);color:#8a1d3b} .tag.lime{background:var(--lime);color:var(--ink)} .tag.blue{background:#dfe4ff;color:#1f33c4}
+.badge{position:absolute;top:18px;left:18px;z-index:2}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+.sw{width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.sw[aria-pressed=true]{outline:3px solid var(--cobalt);outline-offset:2px}
+
+/* forms */
+label.f{display:block;font-weight:600;font-size:.88rem;margin:14px 0 6px}
+input[type=text],input[type=url],input[type=search],select{width:100%;font:500 .95rem var(--body);padding:11px 14px;border-radius:var(--r-s);border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+input:focus,select:focus{border-color:var(--cobalt);outline:0}
+
+/* modal & toast */
+.overlay{position:fixed;inset:0;background:rgba(16,20,38,.55);display:grid;place-items:center;z-index:100;padding:20px;animation:fade .15s}
+.modal{background:#fff;border-radius:var(--r-l);padding:30px;width:min(480px,100%);max-height:92vh;overflow:auto;position:relative;animation:pop .2s}
+.modal.wide{width:min(860px,100%)}
+.modal .x{position:absolute;top:14px;right:16px;border:0;background:#eef0f5;width:36px;height:36px;border-radius:50%;font-size:1.4rem;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:13px 22px;border-radius:99px;font-weight:600;z-index:200;animation:pop .2s}
+@keyframes fade{from{opacity:0}} @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}}
+
+/* scan */
+.scan{position:relative;border-radius:var(--r-m);overflow:hidden;max-width:260px;margin:18px auto}
+.scan::after{content:"";position:absolute;left:0;right:0;height:3px;background:var(--lime);box-shadow:0 0 18px 4px var(--lime);animation:scan 1.3s ease-in-out infinite alternate}
+@keyframes scan{from{top:0}to{top:calc(100% - 3px)}}
+
+/* footer */
+.ftr{background:var(--ink);color:#c9cde0;padding:48px 0;margin-top:40px}
+.ftr .wrap{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+.ftr .logo{color:#fff}
+
+@media(max-width:720px){
+  .sec{padding:56px 0}
+  .hdr .wrap{height:auto;padding:10px 0;flex-wrap:wrap;gap:8px}
+  .nav{order:3;width:100%;margin:0;justify-content:space-between}
+  .pts{margin-left:auto}
+  .tabs{overflow-x:auto}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+</style>
+<style>
+.head{padding:44px 0 0;display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.head h1{font-size:clamp(2.2rem,5vw,3.6rem)}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{background:#fff;border-radius:var(--r-m);padding:10px 16px;min-width:84px}
+.stat b{font-family:var(--display);font-size:1.5rem;display:block;line-height:1.1}.stat span{font-size:.78rem;color:var(--ink-3);font-weight:600}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:28px;align-items:start}
+.up{position:sticky;top:90px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--bg);border-radius:99px;padding:4px;margin:14px 0 18px}
+.seg button{border:0;background:none;border-radius:99px;padding:9px 4px;font:600 .88rem var(--body);cursor:pointer;color:var(--ink-2)}
+.seg button[aria-selected=true]{background:var(--ink);color:#fff}
+.drop{display:grid;place-items:center;text-align:center;gap:8px;border:2px dashed #aab1cf;border-radius:var(--r-m);padding:34px 18px;cursor:pointer;transition:background .15s,border-color .15s}
+.drop:hover,.drop.over{background:#e9ecfb;border-color:var(--cobalt)}
+.drop svg{width:44px;height:44px}
+.drop input{position:absolute;left:-9999px}
+.drop:focus-within{outline:3px solid var(--cobalt);outline-offset:2px}
+.toolbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.toolbar input{max-width:240px}
+.empty{background:#fff;border-radius:var(--r-m);padding:40px;text-align:center;display:grid;gap:10px;justify-items:center}
+.outfits{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.outfit{background:#fff;border-radius:var(--r-l);padding:18px;display:grid;gap:12px}
+.pieces{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
+.pieces .cap{font-size:.74rem;font-weight:600;margin-top:5px;line-height:1.2}
+.big{font-family:var(--display);font-weight:800;font-size:1.8rem;color:var(--cobalt)}
+.frs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.frs .chip{display:flex;align-items:center;gap:8px;padding:6px 16px 6px 6px}
+.frs .av{width:32px;height:32px;font-size:.85rem;color:var(--ink)}
+.req{background:#fff;border-radius:var(--r-m);padding:12px 16px;display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:center;margin-bottom:10px}
+.req .thumb{width:64px}
+.av{border-radius:50%;display:grid;place-items:center;font-weight:800;font-family:var(--display)}
+.review{display:grid;grid-template-columns:200px 1fr;gap:22px}
+.hint{font-size:.8rem;color:var(--ink-3);margin-top:10px}
+video{width:100%;border-radius:var(--r-m);background:#000}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.up{position:static}.review{grid-template-columns:1fr}}
+
+#devPanel{position:fixed;left:16px;bottom:16px;z-index:150;width:250px;background:var(--ink);color:#fff;border-radius:var(--r-m);padding:12px 14px;display:grid;gap:10px;box-shadow:0 10px 30px rgba(16,20,38,.35);font-size:.85rem}
+#devPanel .dv-h{display:flex;align-items:center;gap:10px}
+#devPanel .dv-h>b{background:var(--lime);color:var(--ink);padding:2px 8px;border-radius:6px;font-size:.72rem;letter-spacing:.08em}
+#devPanel .dv-h span{margin-left:auto}
+#devPanel #dvX{border:0;background:none;color:#fff;font-size:1.3rem;cursor:pointer;line-height:1}
+#devPanel .dv-r{display:flex;gap:6px;flex-wrap:wrap}
+#devPanel input{flex:1;min-width:0;padding:7px 10px}
+#devPanel .btn.ghost{color:#fff;box-shadow:inset 0 0 0 1.5px #5a6285}
+#devPanel .btn.ghost:hover{background:#fff;color:var(--ink)}
+
+</style>
+</head>
+<body>
+<div id="hdr"></div>
+<main class="wrap" style="padding-bottom:60px">
+  <div class="head">
+    <div><h1>My wardrobe</h1><p class="muted" style="margin-top:8px">Everything you own, sorted and ready to style.</p></div>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Wardrobe sections">
+    <button class="tab" role="tab" id="t-closet" aria-controls="p-closet" aria-selected="true">Closet</button>
+    <button class="tab" role="tab" id="t-looks" aria-controls="p-looks" aria-selected="false">Outfit ideas</button>
+    <button class="tab" role="tab" id="t-friends" aria-controls="p-friends" aria-selected="false">Friends</button>
+    <button class="tab" role="tab" id="t-requests" aria-controls="p-requests" aria-selected="false">Requests<span class="n" id="reqN" hidden>0</span></button>
+  </div>
+
+  <!-- CLOSET -->
+  <section id="p-closet" role="tabpanel" aria-labelledby="t-closet">
+   <div class="layout">
+    <aside class="card up" aria-label="Add a piece">
+      <h2 style="font-size:1.4rem">Add a piece</h2>
+      <div class="seg" role="tablist" aria-label="Upload method">
+        <button role="tab" data-m="photo" aria-selected="true">Photo</button>
+        <button role="tab" data-m="camera" aria-selected="false">Camera</button>
+        <button role="tab" data-m="link" aria-selected="false">Store link</button>
+      </div>
+      <div id="m-photo">
+        <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple>
+          <svg viewBox="0 0 44 44" fill="none" stroke="#2f4bff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="9" width="34" height="27" rx="5"/><circle cx="16" cy="19" r="3.5"/><path d="M5 31l11-9 8 7 6-5 9 8"/></svg>
+          <b>Drop photos or browse</b><span class="small muted">One piece per photo works best. JPG, PNG, WebP.</span></label>
+      </div>
+      <div id="m-camera" hidden>
+        <p class="muted small" style="margin-bottom:14px">Lay the piece flat on a plain surface and scan it. On phones this opens your camera directly.</p>
+        <button class="btn" id="liveCam" style="width:100%">Open camera</button>
+        <label class="btn ghost" style="width:100%;margin-top:10px;cursor:pointer">Use phone camera app<input class="sr" type="file" id="capFile" accept="image/*" capture="environment"></label>
+      </div>
+      <div id="m-link" hidden>
+        <label class="f" for="url" style="margin-top:0">Product page or image link</label>
+        <input type="url" id="url" placeholder="https://store.com/products/navy-linen-shirt">
+        <button class="btn" id="goLink" style="width:100%;margin-top:12px">Import piece</button>
+        <p class="hint">We read the link to guess the type and colour, and fetch the picture when the store allows it. You can correct everything before saving.</p>
+      </div>
+    </aside>
+
+    <div>
+      <div class="toolbar">
+        <div class="chips" id="catChips" role="group" aria-label="Filter by category"></div>
+        <input type="search" id="q" placeholder="Search your closet" aria-label="Search your closet">
+      </div>
+      <div class="grid" id="closet"></div>
+    </div>
+   </div>
+  </section>
+
+  <!-- LOOKS -->
+  <section id="p-looks" role="tabpanel" aria-labelledby="t-looks" hidden>
+    <div class="toolbar"><div><h2 style="font-size:1.6rem">Outfits from your closet</h2><p class="muted small">The stylist combines tops, bottoms, shoes and accessories you already own.</p></div>
+      <button class="btn dark" id="shuffle">Shuffle looks</button></div>
+    <div class="outfits" id="outfits"></div>
+    <div class="card" style="margin-top:26px;display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--lime)">
+      <div><h3>Want more options?</h3><p class="small">Match any piece you own with donated clothes from the Campus Wardrobe.</p></div>
+      <a class="btn dark" href="thrift.html">Style with campus thrift</a></div>
+  </section>
+
+  <!-- FRIENDS -->
+  <section id="p-friends" role="tabpanel" aria-labelledby="t-friends" hidden>
+    <div class="toolbar"><div><h2 style="font-size:1.6rem">Friends' wardrobes</h2><p class="muted small">Tap Borrow or Swap on anything you like.</p></div>
+      <button class="btn ghost sm" id="invite">Invite a friend</button></div>
+    <div class="frs" id="frs"></div>
+    <div class="grid" id="frGrid"></div>
+  </section>
+
+  <!-- REQUESTS -->
+  <section id="p-requests" role="tabpanel" aria-labelledby="t-requests" hidden>
+    <h2 style="font-size:1.6rem;margin-bottom:18px">Your borrow and swap requests</h2>
+    <div id="reqList"></div>
+  </section>
+</main>
+<div id="ftr"></div>
+<script>
+/* ===== Shared logic: data, styling engine, illustrations, UI helpers ===== */
+/* WA9Re: — shared logic: data, styling engine, garment illustrations, UI helpers */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const store={
+  get(k,d){try{const v=localStorage.getItem('tl_'+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('tl_'+k,JSON.stringify(v))}catch(e){toast('Storage is full. Remove a photo item to add more.')}}
+};
+
+/* ---------- constants ---------- */
+const CATS=['Tops','Pants','Skirts','Shoes','Accessories'];
+const PALETTE={Black:'#23242b',White:'#f5f4f0',Cream:'#ebe0c9',Grey:'#8e9099',Tan:'#bd9266',Brown:'#6b4b37',Navy:'#25375e',Denim:'#5b80ab',
+  Red:'#c23b32',Burgundy:'#6e1f30',Pink:'#e6a5b4',Mustard:'#d4a52f',Olive:'#6b7342',Sage:'#9bb08d'};
+const NEUTRAL=['Black','White','Cream','Grey','Tan','Brown','Navy','Denim'];
+const STYLES=['casual','smart','street','sporty'];
+const PTS_PER_DONATION=40, PTS_PER_DOLLAR=10;
+
+/* ---------- seed data ---------- */
+const SEED_WARDROBE=[
+ {id:'w1',name:'White classic tee',cat:'Tops',color:'White',tags:['casual','street']},
+ {id:'w2',name:'Navy oxford shirt',cat:'Tops',color:'Navy',tags:['smart','casual']},
+ {id:'w3',name:'Straight denim jeans',cat:'Pants',color:'Denim',tags:['casual','street']},
+ {id:'w4',name:'Black pleated skirt',cat:'Skirts',color:'Black',tags:['smart']},
+ {id:'w5',name:'White court sneakers',cat:'Shoes',color:'White',tags:['casual','street','sporty']},
+ {id:'w6',name:'Tan canvas tote',cat:'Accessories',color:'Tan',tags:['casual']}
+];
+const CATALOG=[
+ {id:'d1',name:'Olive cargo pants',cat:'Pants',color:'Olive',size:'M',price:14,orig:52,cond:'Like new',tags:['street','casual'],donor:'Hall 11'},
+ {id:'d2',name:'Sage ribbed knit top',cat:'Tops',color:'Sage',size:'S',price:8,orig:29,cond:'Good',tags:['casual','smart'],donor:'Alumni drive'},
+ {id:'d3',name:'Burgundy satin slip skirt',cat:'Skirts',color:'Burgundy',size:'S',price:12,orig:46,cond:'Like new',tags:['smart'],donor:'Hall 4'},
+ {id:'d4',name:'Mustard knit cardigan',cat:'Tops',color:'Mustard',size:'M',price:11,orig:40,cond:'Good',tags:['casual','smart'],donor:'NIE student'},
+ {id:'d5',name:'Black chelsea boots',cat:'Shoes',color:'Black',size:'M',price:22,orig:89,cond:'Good',tags:['smart','street'],donor:'Hall 8'},
+ {id:'d6',name:'Cream linen shirt',cat:'Tops',color:'Cream',size:'L',price:9,orig:35,cond:'Like new',tags:['smart','casual'],donor:'Hall 2'},
+ {id:'d7',name:'Pink satin mini skirt',cat:'Skirts',color:'Pink',size:'XS',price:7,orig:26,cond:'Good',tags:['street'],donor:'Hall 4'},
+ {id:'d8',name:'Brown leather belt bag',cat:'Accessories',color:'Brown',size:'One size',price:10,orig:38,cond:'Well loved',tags:['street','casual'],donor:'Hall 11'},
+ {id:'d9',name:'Grey tech joggers',cat:'Pants',color:'Grey',size:'L',price:10,orig:45,cond:'Good',tags:['sporty','casual'],donor:'Sports club drive'},
+ {id:'d10',name:'Red oversized graphic tee',cat:'Tops',color:'Red',size:'L',price:6,orig:24,cond:'Good',tags:['street','casual'],donor:'Hall 8'},
+ {id:'d11',name:'Denim A-line mini skirt',cat:'Skirts',color:'Denim',size:'M',price:9,orig:34,cond:'Like new',tags:['casual','street'],donor:'Hall 2'},
+ {id:'d12',name:'Tan suede loafers',cat:'Shoes',color:'Tan',size:'S',price:18,orig:70,cond:'Good',tags:['smart','casual'],donor:'Alumni drive'},
+ {id:'d13',name:'Burgundy ribbed beanie',cat:'Accessories',color:'Burgundy',size:'One size',price:4,orig:15,cond:'Like new',tags:['street','casual'],donor:'Hall 4'},
+ {id:'d14',name:'Black crossbody bag',cat:'Accessories',color:'Black',size:'One size',price:12,orig:48,cond:'Like new',tags:['smart','street'],donor:'NIE student'},
+ {id:'d15',name:'White pleated tennis skirt',cat:'Skirts',color:'White',size:'S',price:8,orig:32,cond:'Like new',tags:['sporty','casual'],donor:'Sports club drive'},
+ {id:'d16',name:'Navy tailored chinos',cat:'Pants',color:'Navy',size:'M',price:13,orig:55,cond:'Good',tags:['smart'],donor:'Hall 11'}
+];
+const FRIENDS=[
+ {id:'f1',name:'Aisha Rahman',hall:'Hall 4',color:'#ffd9e2',items:[
+   {name:'Burgundy wrap top',cat:'Tops',color:'Burgundy',tags:['smart']},{name:'Wide-leg black trousers',cat:'Pants',color:'Black',tags:['smart']},
+   {name:'Cream pleated midi skirt',cat:'Skirts',color:'Cream',tags:['smart','casual']},{name:'Tan block loafers',cat:'Shoes',color:'Tan',tags:['smart']}]},
+ {id:'f2',name:'Marcus Tan',hall:'Hall 11',color:'#cdeee0',items:[
+   {name:'Olive overshirt',cat:'Tops',color:'Olive',tags:['street','casual']},{name:'Grey sweat shorts',cat:'Pants',color:'Grey',tags:['sporty']},
+   {name:'Black high-top trainers',cat:'Shoes',color:'Black',tags:['street','sporty']},{name:'Navy bucket hat',cat:'Accessories',color:'Navy',tags:['street']}]},
+ {id:'f3',name:'Wei Ling Koh',hall:'Hall 8',color:'#dfe4ff',items:[
+   {name:'Mustard knit vest',cat:'Tops',color:'Mustard',tags:['casual']},{name:'Pink satin skirt',cat:'Skirts',color:'Pink',tags:['street']},
+   {name:'White canvas sneakers',cat:'Shoes',color:'White',tags:['casual']},{name:'Black mini backpack',cat:'Accessories',color:'Black',tags:['street','sporty']}]}
+];
+FRIENDS.forEach(f=>f.items.forEach((it,i)=>{it.id=f.id+'-'+i;it.owner=f.id}));
+const VOUCHERS=[
+ {id:'ft',brand:"NTU Food Truck",deal:'$3 off any meal',cost:150,bg:'#ff6b3d',fg:'#fff',mark:'FT'},
+ {id:'sa',brand:'Summer Acai',deal:'$2 off + free topping',cost:120,bg:'#5b2a86',fg:'#fff',mark:'SA'},
+ {id:'lt',brand:"Let's Toast",deal:'$3 off a toast set',cost:100,bg:'#f2c14e',fg:'#101426',mark:'LT'}
+];
+
+/* ---------- state ---------- */
+const S={
+  wardrobe(){let w=store.get('wardrobe',null);if(!w){w=SEED_WARDROBE;store.set('wardrobe',w)}return w},
+  setWardrobe(w){store.set('wardrobe',w)},
+  points(){return store.get('points',120)}, setPoints(n){store.set('points',n);updatePts()},
+  credit(){return store.get('credit',0)}, setCredit(n){store.set('credit',Math.round(n*100)/100)},
+  donated(){return store.get('donated',[])}, cart(){return store.get('cart',[])}, setCart(c){store.set('cart',c)},
+  sold(){return store.get('sold',[])}, requests(){return store.get('requests',[])},
+  vouchers(){return store.get('vouchers',[])},
+  catalog(){return CATALOG.concat(S.donated()).filter(i=>!S.sold().includes(i.id))}
+};
+
+/* ---------- colour & styling engine ---------- */
+const hexRgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function hue(h){let[r,g,b]=hexRgb(h).map(v=>v/255);const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(!d)return 0;
+  let x=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;return(x*60+360)%360}
+const hueDist=(a,b)=>{const d=Math.abs(hue(PALETTE[a])-hue(PALETTE[b]));return d>180?360-d:d};
+function shade(h,amt){return'#'+hexRgb(h).map(v=>Math.max(0,Math.min(255,v+amt)).toString(16).padStart(2,'0')).join('')}
+function nearestColor(r,g,b){let best='Grey',bd=1e9;for(const[n,h]of Object.entries(PALETTE)){const[R,G,B]=hexRgb(h);const d=(R-r)**2+(G-g)**2+(B-b)**2;if(d<bd){bd=d;best=n}}return best}
+
+function colorRel(a,b){
+  if(a===b)return{s:.74,k:'tonal'};
+  const na=NEUTRAL.includes(a),nb=NEUTRAL.includes(b);
+  if(na&&nb){const clash=[a,b].sort().join()==='Black,Brown'||[a,b].sort().join()==='Black,Navy';return{s:clash?.55:.88,k:'neutral'}}
+  if(na||nb)return{s:.92,k:'neutral'};
+  const d=hueDist(a,b);
+  if(d<35)return{s:.82,k:'analogous'}; if(d>140)return{s:.9,k:'complementary'}; return{s:.5,k:'contrast'};
+}
+function pairScore(a,b){
+  const rel=colorRel(a.color,b.color), shared=a.tags.filter(t=>b.tags.includes(t)).length/Math.min(a.tags.length,b.tags.length);
+  return{score:Math.max(52,Math.min(98,Math.round(40+45*rel.s+15*shared))),rel:rel.k,shared:shared>0};
+}
+function reason(a,b,p){
+  const A=a.color.toLowerCase(),B=b.color.toLowerCase(),nb=b.name.toLowerCase();
+  const t={
+    neutral:NEUTRAL.includes(a.color)&&NEUTRAL.includes(b.color)?`Two grounded neutrals. Easy to wear, and the ${B} adds depth without noise.`:`A neutral base lets the ${NEUTRAL.includes(a.color)?B:A} do the talking.`,
+    tonal:`Matching ${A} tones for a clean, head-to-toe look.`,
+    analogous:`${a.color} and ${b.color} sit next to each other on the colour wheel, so they blend softly.`,
+    complementary:`${a.color} against ${b.color} is a confident contrast that still reads balanced.`,
+    contrast:`A bolder mix. Keep the rest of the outfit neutral to let it work.`
+  }[p.rel];
+  return t+(p.shared?' Same vibe too.':'');
+}
+const COMP={Tops:['Pants','Skirts','Shoes','Accessories'],Pants:['Tops','Shoes','Accessories'],Skirts:['Tops','Shoes','Accessories'],Shoes:['Tops','Pants','Skirts'],Accessories:['Tops','Pants','Skirts']};
+function recommend(anchor,pool,n=3){
+  return pool.filter(p=>p.id!==anchor.id&&COMP[anchor.cat].includes(p.cat))
+    .map(p=>({item:p,...pairScore(anchor,p)})).map(r=>({...r,why:reason(anchor,r.item,r)})).sort((a,b)=>b.score-a.score).slice(0,n);
+}
+function buildLooks(anchor,pool,count=3){
+  const slots={Tops:[['Pants','Skirts'],['Shoes']],Pants:[['Tops'],['Shoes']],Skirts:[['Tops'],['Shoes']],Shoes:[['Tops'],['Pants','Skirts']],Accessories:[['Tops'],['Pants','Skirts']]}[anchor.cat];
+  const ranked=slots.map(cs=>pool.filter(p=>cs.includes(p.cat)&&p.id!==anchor.id).map(p=>({item:p,...pairScore(anchor,p)})).sort((a,b)=>b.score-a.score));
+  const looks=[];
+  for(let i=0;i<count;i++){
+    const parts=ranked.map(r=>r.length?r[i%r.length]:null).filter(Boolean);
+    if(!parts.length)break;
+    const dup=looks.some(l=>l.parts.map(p=>p.item.id).join()===parts.map(p=>p.item.id).join()); if(dup)continue;
+    looks.push({parts,score:Math.round(parts.reduce((s,p)=>s+p.score,0)/parts.length)});
+  }
+  return looks;
+}
+function buildOutfits(items,count=3){
+  const by=c=>items.filter(i=>i.cat===c), bottoms=by('Pants').concat(by('Skirts')), out=[];
+  for(const t of by('Tops'))for(const b of bottoms)for(const s of (by('Shoes').length?by('Shoes'):[null])){
+    const parts=[t,b,s].filter(Boolean);let sc=pairScore(t,b).score;if(s)sc=(sc+pairScore(b,s).score+pairScore(t,s).score)/3;
+    const acc=by('Accessories');if(acc.length){const a=acc[Math.floor(Math.random()*acc.length)];parts.push(a);sc=(sc*3+pairScore(t,a).score)/4}
+    out.push({parts,score:Math.round(sc),sort:sc+Math.random()*9});
+  }
+  return out.sort((a,b)=>b.sort-a.sort).slice(0,count);
+}
+
+/* ---------- garment illustrations (SVG, used wherever a photo isn't available) ---------- */
+// function garmentSVG(cat,color){
+//   const c=PALETTE[color]||color,d=shade(c,-34),l=shade(c,26),w='stroke-linejoin="round" stroke-linecap="round"';
+//   const P={
+//    //Tops:`<path d="M62 28 86 18Q100 40 114 18L138 28 182 74 158 98 142 84V212Q100 224 58 212V84L42 98 18 74Z" fill="${c}" stroke="${d}" stroke-width="3" ${w}/><path d="M86 18Q100 40 114 18" fill="none" stroke="${d}" stroke-width="5" ${w}/><path d="M58 198Q100 210 142 198" fill="none" stroke="${l}" stroke-width="3" opacity=".6"/><path d="M62 84 58 150M138 84 142 150" stroke="${d}" stroke-width="1.5" opacity=".35"/>`,
+//    Tops:`<path d="M62 28 86 18Q100 40 114 18L138 28 182 74 158 98 142 84V212Q100 224 58 212V84L42 98 18 74Z" fill="${c}" stroke="${d}" stroke-width="3" ${w}/><path d="M86 18Q100 40 114 18" fill="none" stroke="${d}" stroke-width="5" ${w}/><path d="M58 198Q100 210 142 198" fill="none" stroke="${l}" stroke-width="3" opacity=".6"/><path d="M62 84 58 150M138 84 142 150" stroke="${d}" stroke-width="1.5" opacity=".35"/>`,
+//    Pants:`<path d="M54 20H146L158 222H110L100 100 90 222H42Z" fill="${c}" stroke="${d}" stroke-width="3" ${w}/><rect x="54" y="20" width="92" height="15" fill="${d}" opacity=".35"/><path d="M100 35V100M66 52Q74 70 86 66M134 52Q126 70 114 66" fill="none" stroke="${d}" stroke-width="2" opacity=".6"/><path d="M62 215 66 160M138 215 134 160" stroke="${l}" stroke-width="3" opacity=".5"/>`,
+//    Skirts:`<path d="M64 34H136L180 208Q100 230 20 208Z" fill="${c}" stroke="${d}" stroke-width="3" ${w}/><rect x="64" y="34" width="72" height="14" fill="${d}" opacity=".35"/><path d="M82 48 62 214M100 48V220M118 48 138 214M91 48 79 217M109 48 121 217" stroke="${d}" stroke-width="1.5" opacity=".35"/>`,
+//    Shoes:`<path d="M22 150Q22 118 54 116L80 124Q96 138 122 138Q168 138 182 164V176Q182 190 168 190H34Q22 190 22 176Z" fill="${c}" stroke="${d}" stroke-width="3" ${w}/><path d="M22 172H182V190Q182 192 168 192H34Q22 192 22 176Z" fill="#f4f4f4" stroke="${d}" stroke-width="3" ${w}/><path d="M62 128 76 142M74 124 88 138M86 126 98 138" stroke="${l}" stroke-width="3" ${w}/><path d="M30 156Q60 150 80 164" stroke="${d}" stroke-width="2" fill="none" opacity=".5"/>`,
+//    Accessories:`<path d="M72 78Q72 30 100 30Q128 30 128 78" fill="none" stroke="${d}" stroke-width="7" ${w}/><path d="M40 78H160L172 206Q172 216 160 216H40Q28 216 28 206Z" fill="${c}" stroke="${d}" stroke-width="3" ${w}/><path d="M40 78H160" stroke="${l}" stroke-width="3" opacity=".6"/><rect x="82" y="104" width="36" height="26" rx="6" fill="${d}" opacity=".3"/>`
+//   };
+//   return`<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${color} ${cat.toLowerCase()} illustration">${P[cat]}</svg>`;
+// }
+
+
+const IMG_DIR='images/';
+const placeholder=cat=>IMG_DIR+'placeholder-'+cat.toLowerCase()+'.jpg';
+const imgOf=it=>it.img||(it.id?IMG_DIR+'items/'+it.id+'.jpg':placeholder(it.cat));
+const thumb=it=>`<div class="thumb"><img src="${imgOf(it)}" alt="${esc(it.name)}" loading="lazy" onerror="this.onerror=null;this.src='${placeholder(it.cat)}'"></div>`;
+const hanger=()=>`<svg viewBox="0 0 80 36" width="64" aria-hidden="true"><path d="M40 4Q46 4 46 10Q46 15 40 18L40 22M40 22 6 32Q2 34 8 34H72Q78 34 74 32Z" fill="none" stroke="#101426" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const ptsIcon=`<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="#101426"/><path d="M6 10.5l3 3 5-7" fill="none" stroke="#d6f33f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/* ---------- UI helpers ---------- */
+function toast(msg){$('.toast')?.remove();const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=msg;document.body.append(t);setTimeout(()=>t.remove(),2800)}
+function modal(html,wide){
+  const o=document.createElement('div');o.className='overlay';
+  o.innerHTML=`<div class="modal${wide?' wide':''}" role="dialog" aria-modal="true"><button class="x" aria-label="Close">&times;</button><div class="mb">${html}</div></div>`;
+  const close=()=>{o.remove();document.removeEventListener('keydown',esck)};
+  const esck=e=>{if(e.key==='Escape')close()};
+  o.addEventListener('click',e=>{if(e.target===o||e.target.closest('.x'))close()});
+  document.addEventListener('keydown',esck);document.body.append(o);o.querySelector('.x').focus();
+  return{el:o,body:o.querySelector('.mb'),close};
+}
+function updatePts(){const p=$('#ptsVal');if(p)p.textContent=S.points()}
+
+/* ===== DEV MODE: adjust demo points. Enable with ?dev=1 (disable ?dev=0) or toggle with Ctrl+Shift+D ===== */
+(function devMode(){
+  const q=new URLSearchParams(location.search);
+  if(q.get('dev')==='1')store.set('dev',true);
+  if(q.get('dev')==='0')store.set('dev',false);
+  const sync=()=>{updatePts();if(typeof wallet==='function'){wallet();renderRewards()}const v=$('#devPts');if(v)v.textContent=S.points();const i=$('#dvIn');if(i)i.value=S.points()};
+  const setP=n=>{S.setPoints(Math.max(0,Math.round(+n)||0));sync()};
+  function build(){
+    $('#devPanel')?.remove();
+    if(!store.get('dev',false))return;
+    const d=document.createElement('aside');d.id='devPanel';d.setAttribute('aria-label','Developer tools');
+    d.innerHTML=`<div class="dv-h"><b>DEV</b><span>Points: <b id="devPts">${S.points()}</b></span><button id="dvX" aria-label="Hide dev panel">&times;</button></div>
+      <div class="dv-r"><input type="number" id="dvIn" min="0" step="10" value="${S.points()}" aria-label="Set points to"><button class="btn sm" id="dvSet">Set</button></div>
+      <div class="dv-r"><button class="btn ghost sm" data-d="-50">-50</button><button class="btn ghost sm" data-d="50">+50</button><button class="btn ghost sm" data-d="500">+500</button></div>
+      <div class="dv-r"><button class="btn ghost sm" id="dvQuiz">Retake quiz</button><button class="btn ghost sm" id="dvReset">Reset all data</button></div>`;
+    document.body.append(d);
+    $('#dvSet',d).onclick=()=>setP($('#dvIn',d).value);
+    $('#dvIn',d).onkeydown=e=>{if(e.key==='Enter')setP(e.target.value)};
+    $$('[data-d]',d).forEach(b=>b.onclick=()=>setP(S.points()+ +b.dataset.d));
+    $('#dvX',d).onclick=()=>{store.set('dev',false);build()};
+    $('#dvQuiz',d).onclick=()=>{localStorage.removeItem('tl_profile');localStorage.removeItem('tl_quizSeen');location.href='Homepage.html'};
+    $('#dvReset',d).onclick=()=>{if(!confirm('Clear all demo data (wardrobe, points, cart, requests)?'))return;Object.keys(localStorage).filter(k=>k.startsWith('tl_')&&k!=='tl_dev').forEach(k=>localStorage.removeItem(k));location.reload()};
+  }
+  document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='d'){e.preventDefault();store.set('dev',!store.get('dev',false));build()}});
+  build();
+})();
+
+function chrome(active){
+  const L=[['Homepage.html','Home'],['wardrobe.html','My wardrobe'],['thrift.html','Campus thrift']];
+  $('#hdr').outerHTML=`<header class="hdr"><div class="wrap">
+    <a class="logo" href="Homepage.html" aria-label="WA9Re: home"><a class="logo" href="Homepage.html" aria-label="WA9Re: home"><img src="./images/logo.png" alt="" width="34" height="34" style="border-radius:50%;object-fit:cover">WA9Re:</a>
+    <nav class="nav" aria-label="Main">${L.map(([h,t])=>`<a href="${h}"${h===active?' aria-current="page"':''}>${t}</a>`).join('')}</nav>
+    <a class="pts" href="thrift.html#rewards" title="Your points">${ptsIcon}<span><span id="ptsVal">${S.points()}</span> pts</span></a></div></header>`;
+  $('#ftr').outerHTML=`<footer class="ftr"><div class="wrap"><a class="logo" href="Homepage.html">WA9Re:</a>
+    <p class="small">Wear it, swap it, donate it. A campus wardrobe for NTU. This is a Prototype: your data stays in this browser.</p></div></footer>`;
+}
+
+
+/* ===== Page logic ===== */
+chrome('wardrobe.html');
+let W=S.wardrobe(), cat='All', fr=FRIENDS[0].id;
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+const save=()=>S.setWardrobe(W);
+
+/* ---------- tabs ---------- */
+function showTab(id){
+  $$('.tabs .tab').forEach(t=>t.setAttribute('aria-selected',t.id==='t-'+id));
+  $$('[role=tabpanel]').forEach(p=>p.hidden=p.id!=='p-'+id);
+  if(id==='looks')renderLooks(); if(id==='friends')renderFriends(); if(id==='requests')renderReqs();
+  history.replaceState(null,'','#'+id);
+}
+$$('.tabs .tab').forEach(t=>t.onclick=()=>showTab(t.id.slice(2)));
+
+/* ---------- closet ---------- */
+function renderStats(){
+  $('#stats').innerHTML=`<div class="stat"><b>${W.length}</b><span>pieces</span></div>`+CATS.map(c=>`<div class="stat"><b>${W.filter(i=>i.cat===c).length}</b><span>${c}</span></div>`).join('');
+}
+function renderCloset(){
+  renderStats();
+  $('#catChips').innerHTML=['All',...CATS].map(c=>`<button class="chip" aria-pressed="${c===cat}" data-c="${c}">${c}${c==='All'?'':' ('+W.filter(i=>i.cat===c).length+')'}</button>`).join('');
+  $$('#catChips .chip').forEach(b=>b.onclick=()=>{cat=b.dataset.c;renderCloset()});
+  const q=$('#q').value.trim().toLowerCase();
+  const list=W.filter(i=>(cat==='All'||i.cat===cat)&&(!q||(i.name+i.color+i.cat).toLowerCase().includes(q)));
+  $('#closet').innerHTML=list.length?list.map(i=>`<article class="item">${thumb(i)}<div class="meta"><h3>${esc(i.name)}</h3><div class="sub">${i.cat}, ${i.color}${i.src?' · via '+esc(i.src):''}</div></div>
+    <div class="acts"><button class="btn ghost sm" data-don="${i.id}">Donate +${PTS_PER_DONATION}</button><button class="btn ghost sm" data-del="${i.id}" aria-label="Remove ${esc(i.name)}">Remove</button></div></article>`).join('')
+   :`<div class="empty" style="grid-column:1/-1"><h3>${W.length?'Nothing matches that search':'Your closet is empty'}</h3><p class="muted small">${W.length?'Try another category or clear the search.':'Add your first piece with the panel on the left.'}</p></div>`;
+  $$('[data-del]').forEach(b=>b.onclick=()=>{const it=W.find(i=>i.id===b.dataset.del);W=W.filter(i=>i.id!==it.id);save();renderCloset();toast('Removed '+it.name)});
+  $$('[data-don]').forEach(b=>b.onclick=()=>donate(W.find(i=>i.id===b.dataset.don)));
+}
+$('#q').oninput=renderCloset;
+
+function donate(it){
+  const m=modal(`<h2 style="font-size:1.5rem">Donate this piece?</h2><div style="width:150px;margin:18px 0">${thumb(it)}</div>
+   <p>${esc(it.name)} will move to the Campus Wardrobe for other students to buy. You earn <b>${PTS_PER_DONATION} points</b> straight away.</p>
+   <div style="display:flex;gap:10px;margin-top:22px"><button class="btn" id="yes">Donate and earn ${PTS_PER_DONATION} pts</button><button class="btn ghost" id="no">Keep it</button></div>`);
+  $('#no',m.body).onclick=m.close;
+  $('#yes',m.body).onclick=()=>{
+    const base={Tops:9,Pants:12,Skirts:9,Shoes:16,Accessories:8}[it.cat];
+    store.set('donated',S.donated().concat([{id:'dn'+Date.now(),name:it.name,cat:it.cat,color:it.color,tags:it.tags,size:'M',price:base,orig:Math.round(base*3.4),cond:'Good',donor:'You',img:imgOf(it)}]));
+    W=W.filter(i=>i.id!==it.id);save();S.setPoints(S.points()+PTS_PER_DONATION);renderCloset();m.close();toast(`Donated. +${PTS_PER_DONATION} points`);
+  };
+}
+
+/* ---------- upload modes ---------- */
+$$('.seg button').forEach(b=>b.onclick=()=>{$$('.seg button').forEach(x=>x.setAttribute('aria-selected',x===b));['photo','camera','link'].forEach(m=>$('#m-'+m).hidden=m!==b.dataset.m)});
+
+function toData(src,name){
+  const w=src.videoWidth||src.naturalWidth||src.width,h=src.videoHeight||src.naturalHeight||src.height,sc=Math.min(1,480/Math.max(w,h));
+  const c=document.createElement('canvas');c.width=Math.round(w*sc);c.height=Math.round(h*sc);const x=c.getContext('2d');x.drawImage(src,0,0,c.width,c.height);
+  let col='Grey';try{const d=x.getImageData(c.width*.3,c.height*.3,c.width*.4,c.height*.4).data;let r=0,g=0,b=0,n=0;
+    for(let i=0;i<d.length;i+=16){r+=d[i];g+=d[i+1];b+=d[i+2];n++}col=nearestColor(r/n,g/n,b/n)}catch(e){}
+  return{dataUrl:c.toDataURL('image/jpeg',.78),ratio:w/h,color:col,name:name||''}
+}
+function fileData(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>res(toData(im,file.name));im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
+
+const KW={Tops:'tee t-shirt tshirt shirt top blouse hoodie sweater jumper tank cardigan jacket polo knit vest crop',Pants:'pant jean trouser short jogger denim chino legging cargo',
+  Skirts:'skirt skort midi mini dress',Shoes:'shoe sneaker boot heel loafer sandal trainer flat slipper oxford',Accessories:'bag belt hat cap scarf watch tote necklace sunglass beanie backpack bracelet purse'};
+function detect(text,ratio){
+  const t=text.toLowerCase().replace(/[-_+.\/]/g,' ');
+  for(const c of ['Skirts','Shoes','Accessories','Pants','Tops'])for(const k of KW[c].split(' '))if(t.includes(k))return{cat:c,conf:94,by:'name'};
+  if(ratio>1.35)return{cat:'Shoes',conf:71,by:'shape'}; if(ratio<.72)return{cat:'Pants',conf:68,by:'shape'}; return{cat:'Tops',conf:62,by:'shape'};
+}
+
+async function addFlow(data){
+  const prev=data.dataUrl?`<img src="${data.dataUrl}" alt="Your upload" style="width:100%">`:`<div style="padding:30px;background:var(--bg)">${garmentSVG('Tops','Grey')}</div>`;
+  const m=modal(`<h2 style="font-size:1.5rem">Scanning your piece</h2><div class="scan">${prev}</div><p id="scanTxt" class="muted" style="text-align:center" aria-live="polite">Finding the garment</p>`);
+  const msgs=['Finding the garment','Reading the colour','Matching it to your styles'];
+  for(const t of msgs){if(!document.body.contains(m.el))return;$('#scanTxt',m.body).textContent=t;await delay(520)}
+  if(!document.body.contains(m.el))return;
+  review(m,data,detect(data.name+' '+(data.hint||''),data.ratio||1));
+}
+function review(m,data,det){
+  let c=det.cat,col=data.color||'Grey',tags=['casual'];
+  const render=()=>{
+    m.body.innerHTML=`<h2 style="font-size:1.5rem;margin-bottom:6px">Looks like ${/^[aeiou]/i.test(c)?'an':'a'} ${c.slice(0,-1).toLowerCase().replace('accessorie','accessory')}</h2>
+    <p class="small muted">${c===det.cat?`Detected with ${det.conf}% confidence. `:''}Check the details, then add it to your closet.</p>
+    <div class="review" style="margin-top:16px"><div>${thumb({img:data.dataUrl,cat:c,color:col,name:'Preview'})}</div>
+    <div><label class="f" for="nm" style="margin-top:0">Name</label><input type="text" id="nm" value="${esc(data.title||(col+' '+({Tops:'top',Pants:'pants',Skirts:'skirt',Shoes:'shoes',Accessories:'accessory'}[c])))}">
+    <label class="f">Type</label><div class="chips">${CATS.map(x=>`<button class="chip" data-c="${x}" aria-pressed="${x===c}">${x}</button>`).join('')}</div>
+    <label class="f">Colour: ${col}</label><div class="swatches">${Object.entries(PALETTE).map(([n,h])=>`<button class="sw" data-col="${n}" style="background:${h}" aria-label="${n}" aria-pressed="${n===col}"></button>`).join('')}</div>
+    <label class="f">Style</label><div class="chips">${STYLES.map(x=>`<button class="chip" data-t="${x}" aria-pressed="${tags.includes(x)}">${x}</button>`).join('')}</div></div></div>
+    <div style="display:flex;gap:10px;margin-top:22px"><button class="btn" id="add">Add to closet</button><button class="btn ghost" id="cx">Cancel</button></div>`;
+    const keep=$('#nm',m.body);let nameTouched=false;keep.oninput=()=>nameTouched=true;
+    $$('[data-c]',m.body).forEach(b=>b.onclick=()=>{data.title=nameTouched?keep.value:'';c=b.dataset.c;render()});
+    $$('[data-col]',m.body).forEach(b=>b.onclick=()=>{data.title=nameTouched?keep.value:'';col=b.dataset.col;render()});
+    $$('[data-t]',m.body).forEach(b=>b.onclick=()=>{const t=b.dataset.t;tags=tags.includes(t)?tags.filter(x=>x!==t):tags.concat(t);data.title=nameTouched?keep.value:'';render()});
+    $('#cx',m.body).onclick=m.close;
+    $('#add',m.body).onclick=()=>{
+      W.unshift({id:'u'+Date.now()+Math.floor(Math.random()*99),name:keep.value.trim()||'Untitled piece',cat:c,color:col,tags:tags.length?tags:['casual'],img:data.dataUrl||null,src:data.source||null});
+      save();cat='All';renderCloset();m.close();toast('Added to your closet');
+    };
+  };
+  render();
+}
+
+/* photo */
+async function handleFiles(files){for(const f of files){if(!f.type.startsWith('image/'))continue;try{await addFlow(await fileData(f));await delay(100);while($('.overlay'))await delay(300)}catch(e){toast('Could not read '+f.name)}}}
+$('#file').onchange=e=>{handleFiles([...e.target.files]);e.target.value=''};
+$('#capFile').onchange=e=>{handleFiles([...e.target.files]);e.target.value=''};
+const drop=$('#drop');['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over')}));
+drop.addEventListener('drop',e=>handleFiles([...e.dataTransfer.files]));
+
+/* live camera */
+$('#liveCam').onclick=async()=>{
+  if(!navigator.mediaDevices?.getUserMedia){toast('Camera not available here. Use the phone camera option.');return}
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})}catch(e){toast('Camera blocked. Allow access in your browser, or upload a photo.');return}
+  const m=modal(`<h2 style="font-size:1.5rem;margin-bottom:14px">Scan a piece</h2><video autoplay playsinline muted></video><p class="hint">Centre the garment in the frame on a plain background.</p><button class="btn" id="snap" style="margin-top:14px;width:100%">Capture</button>`);
+  const v=$('video',m.body);v.srcObject=stream;
+  const stop=()=>stream.getTracks().forEach(t=>t.stop());
+  new MutationObserver(()=>{if(!document.body.contains(m.el))stop()}).observe(document.body,{childList:true});
+  $('#snap',m.body).onclick=()=>{const d=toData(v,'camera scan');stop();m.close();addFlow(d)};
+};
+
+/* store link */
+async function importLink(raw){
+  let u;try{u=new URL(raw)}catch(e){toast('Enter a full link, starting with https://');return}
+  const path=decodeURIComponent(u.pathname).replace(/\.(jpe?g|png|webp|gif|html?)$/i,'');
+  const words=path.split(/[\/\-_+]/).filter(w=>w&&!/^\d+$/.test(w)&&w.length<18&&!/^[a-f0-9]{8,}$/i.test(w));
+  const slug=words.slice(-5).join(' ');
+  const guessCol=Object.keys(PALETTE).find(n=>slug.toLowerCase().split(' ').includes(n.toLowerCase()))||'Grey';
+  const data={name:slug,hint:u.hostname,title:slug?slug.charAt(0).toUpperCase()+slug.slice(1).toLowerCase():'Imported piece',color:guessCol,ratio:1,source:u.hostname.replace(/^www\./,''),dataUrl:null};
+  if(/\.(jpe?g|png|webp|gif)(\?|$)/i.test(u.href)){
+    const im=await new Promise(res=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>res(i);i.onerror=()=>res(null);i.src=u.href});
+    if(im){try{Object.assign(data,toData(im,slug),{title:data.title,source:data.source})}catch(e){}}
+  }
+  $('#url').value='';addFlow(data);
+  if(!data.dataUrl)toast('Picture not available from this store. Using an illustration instead.');
+}
+$('#goLink').onclick=()=>importLink($('#url').value.trim());
+$('#url').onkeydown=e=>{if(e.key==='Enter')importLink(e.target.value.trim())};
+
+/* ---------- outfit ideas ---------- */
+function renderLooks(){
+  const has=W.some(i=>i.cat==='Tops')&&W.some(i=>['Pants','Skirts'].includes(i.cat));
+  if(!has){$('#outfits').innerHTML=`<div class="empty" style="grid-column:1/-1"><h3>Add a top and a bottom to get outfits</h3><p class="muted small">Upload at least one top and one pair of pants or a skirt.</p></div>`;return}
+  $('#outfits').innerHTML=buildOutfits(W,3).map(o=>{const p=pairScore(o.parts[0],o.parts[1]);return`<article class="outfit"><div class="pieces">${o.parts.map(x=>`<div>${thumb(x)}<div class="cap">${esc(x.name)}</div></div>`).join('')}</div>
+   <div style="display:flex;justify-content:space-between;align-items:center"><span class="big">${o.score}%</span><span class="tag blue">${o.parts.length} pieces</span></div>
+   <p class="small muted">${esc(reason(o.parts[0],o.parts[1],p))}</p></article>`}).join('');
+}
+$('#shuffle').onclick=renderLooks;
+
+/* ---------- friends ---------- */
+function renderFriends(){
+  $('#frs').innerHTML=FRIENDS.map(f=>`<button class="chip" aria-pressed="${f.id===fr}" data-f="${f.id}"><span class="av" style="background:${f.color}">${f.name[0]}</span>${f.name.split(' ')[0]}</button>`).join('');
+  $$('[data-f]').forEach(b=>b.onclick=()=>{fr=b.dataset.f;renderFriends()});
+  const f=FRIENDS.find(x=>x.id===fr),reqs=S.requests();
+  $('#frGrid').innerHTML=f.items.map(i=>{const pending=reqs.find(r=>r.item.id===i.id&&r.status==='Pending');return`<article class="item">${thumb(i)}<div class="meta"><h3>${esc(i.name)}</h3><div class="sub">${f.name.split(' ')[0]}, ${f.hall}</div></div>
+   <div class="acts">${pending?`<span class="tag pink">${pending.type} requested</span>`:`<button class="btn sm" data-b="${i.id}">Borrow</button><button class="btn ghost sm" data-s="${i.id}">Swap</button>`}</div></article>`}).join('');
+  $$('[data-b]').forEach(b=>b.onclick=()=>request('Borrow',f.items.find(i=>i.id===b.dataset.b),f));
+  $$('[data-s]').forEach(b=>b.onclick=()=>request('Swap',f.items.find(i=>i.id===b.dataset.s),f));
+}
+function request(type,item,f){
+  const m=modal(`<h2 style="font-size:1.5rem">${type} ${esc(item.name.toLowerCase())}</h2><div style="width:130px;margin:16px 0">${thumb(item)}</div>
+   ${type==='Borrow'?`<label class="f" for="term">How long do you need it?</label><select id="term"><option>2 days</option><option>1 week</option><option>2 weeks</option></select>`
+   :`<label class="f" for="offer">Which of your pieces will you offer?</label><select id="offer">${W.length?W.map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join(''):'<option value="">Your closet is empty</option>'}</select>`}
+   <div style="display:flex;gap:10px;margin-top:22px"><button class="btn" id="send"${type==='Swap'&&!W.length?' disabled':''}>Send request to ${f.name.split(' ')[0]}</button></div>`);
+  $('#send',m.body).onclick=()=>{
+    const o=type==='Swap'?W.find(i=>i.id===$('#offer',m.body).value):null;
+    store.set('requests',[{id:'r'+Date.now(),type,item,friend:f.name,offer:o?{name:o.name}:null,term:type==='Borrow'?$('#term',m.body).value:null,status:'Pending'}].concat(S.requests()));
+    m.close();renderFriends();updateReqN();toast('Request sent to '+f.name.split(' ')[0]);
+  };
+}
+$('#invite').onclick=()=>{const m=modal(`<h2 style="font-size:1.5rem">Invite a friend</h2><p class="muted" style="margin:10px 0 14px">Share this link. Once they join, their wardrobe appears here.</p><input type="text" readonly value="https://WA9Re:.ntu/join/you" id="inv"><button class="btn" style="margin-top:14px" id="cp">Copy link</button>`);
+  $('#cp',m.body).onclick=()=>{navigator.clipboard?.writeText($('#inv',m.body).value);toast('Link copied')}};
+
+/* ---------- requests ---------- */
+function updateReqN(){const n=S.requests().filter(r=>r.status==='Pending').length;const b=$('#reqN');b.hidden=!n;b.textContent=n}
+function renderReqs(){
+  const r=S.requests();
+  $('#reqList').innerHTML=r.length?r.map(x=>`<div class="req">${thumb(x.item)}<div><b>${x.type}: ${esc(x.item.name)}</b><div class="small muted">From ${esc(x.friend)}${x.term?' for '+x.term:''}${x.offer?'. You offered '+esc(x.offer.name):''}</div></div>
+   <div style="display:flex;gap:8px;align-items:center"><span class="tag ${x.status==='Pending'?'pink':''}">${x.status}</span><button class="btn ghost sm" data-x="${x.id}">Cancel</button></div></div>`).join('')
+   :`<div class="empty"><h3>No requests yet</h3><p class="muted small">Browse a friend's wardrobe and tap Borrow or Swap.</p><button class="btn" id="goF">See friends</button></div>`;
+  $$('[data-x]').forEach(b=>b.onclick=()=>{store.set('requests',S.requests().filter(x=>x.id!==b.dataset.x));renderReqs();updateReqN()});
+  $('#goF')&&($('#goF').onclick=()=>showTab('friends'));
+}
+
+renderCloset();updateReqN();
+const h=location.hash.slice(1);if(['looks','friends','requests'].includes(h))showTab(h);
+</script>
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Campus thrift | WA9Re:</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" type="image/logo" href="images/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Shared base styles ===== */
+/* WA9Re: — shared design tokens & components */
+:root{
+  --ink:#101426; --ink-2:#4a5068; --ink-3:#7c8197;
+  --bg:#eef0f5; --card:#ffffff; --line:#d9dce7;
+  --cobalt:#2f4bff; --cobalt-d:#1f33c4; --lime:#d6f33f; --blush:#ffd9e2; --mint:#cdeee0;
+  --r-s:8px; --r-m:14px; --r-l:26px;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'DM Sans','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);line-height:1.08;letter-spacing:-.02em;font-weight:700}
+h1{font-size:clamp(2.5rem,6vw,4.6rem)} h2{font-size:clamp(1.8rem,3.6vw,2.8rem)} h3{font-size:1.2rem;letter-spacing:-.01em}
+p{max-width:62ch}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px;border-radius:6px}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+.sec{padding:84px 0}
+.muted{color:var(--ink-2)} .small{font-size:.88rem}
+.sr{position:absolute;left:-9999px}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:40;background:rgba(238,240,245,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:20px;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:1.3rem;text-decoration:none;letter-spacing:-.03em}
+.nav{display:flex;gap:4px;margin-left:auto}
+.nav a{padding:9px 16px;border-radius:99px;text-decoration:none;font-weight:600;font-size:.95rem;color:var(--ink-2)}
+.nav a:hover{background:#e0e4f0;color:var(--ink)}
+.nav a[aria-current=page]{background:var(--ink);color:#fff}
+.pts{display:flex;align-items:center;gap:8px;background:var(--lime);padding:7px 14px;border-radius:99px;font-weight:700;font-size:.9rem;white-space:nowrap}
+.pts svg{width:16px;height:16px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;font:600 .95rem var(--body);padding:12px 22px;border-radius:99px;background:var(--cobalt);color:#fff;text-decoration:none;transition:background .15s,transform .1s}
+.btn:hover{background:var(--cobalt-d)} .btn:active{transform:scale(.97)}
+.btn.dark{background:var(--ink)} .btn.dark:hover{background:#262c4a}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)} .btn.ghost:hover{background:var(--ink);color:#fff}
+.btn.lime{background:var(--lime);color:var(--ink)} .btn.lime:hover{background:#c5e32c}
+.btn.sm{padding:8px 15px;font-size:.85rem} .btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* chips & tabs */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:0;cursor:pointer;font:600 .86rem var(--body);padding:8px 15px;border-radius:99px;background:#fff;color:var(--ink-2);box-shadow:inset 0 0 0 1.5px var(--line)}
+.chip:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.chip[aria-pressed=true],.chip.on{background:var(--ink);color:#fff;box-shadow:none}
+.tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin:28px 0}
+.tab{border:0;background:none;cursor:pointer;font:600 1rem var(--body);padding:12px 18px;color:var(--ink-3);position:relative;top:2px;border-bottom:3px solid transparent}
+.tab[aria-selected=true]{color:var(--ink);border-color:var(--cobalt)}
+.tab .n{background:var(--cobalt);color:#fff;border-radius:99px;font-size:.72rem;padding:1px 7px;margin-left:6px}
+
+/* cards & garments */
+.card{background:var(--card);border-radius:var(--r-m);padding:22px}
+.thumb{aspect-ratio:5/6;border-radius:var(--r-s);background:linear-gradient(160deg,#f6f7fb,#e7eaf3);display:grid;place-items:center;overflow:hidden}
+.thumb svg,.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb svg{padding:8%;object-fit:contain}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px}
+.item{background:var(--card);border-radius:var(--r-m);padding:10px;display:flex;flex-direction:column;gap:10px;position:relative}
+.item .meta{padding:0 6px}
+.item h3{font-size:1rem;line-height:1.25}
+.item .sub{font-size:.82rem;color:var(--ink-3)}
+.item .acts{display:flex;gap:6px;padding:0 6px 6px;margin-top:auto;flex-wrap:wrap}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--mint);color:#17503b}
+.tag.pink{background:var(--blush);color:#8a1d3b} .tag.lime{background:var(--lime);color:var(--ink)} .tag.blue{background:#dfe4ff;color:#1f33c4}
+.badge{position:absolute;top:18px;left:18px;z-index:2}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+.sw{width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.sw[aria-pressed=true]{outline:3px solid var(--cobalt);outline-offset:2px}
+
+/* forms */
+label.f{display:block;font-weight:600;font-size:.88rem;margin:14px 0 6px}
+input[type=text],input[type=url],input[type=search],select{width:100%;font:500 .95rem var(--body);padding:11px 14px;border-radius:var(--r-s);border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+input:focus,select:focus{border-color:var(--cobalt);outline:0}
+
+/* modal & toast */
+.overlay{position:fixed;inset:0;background:rgba(16,20,38,.55);display:grid;place-items:center;z-index:100;padding:20px;animation:fade .15s}
+.modal{background:#fff;border-radius:var(--r-l);padding:30px;width:min(480px,100%);max-height:92vh;overflow:auto;position:relative;animation:pop .2s}
+.modal.wide{width:min(860px,100%)}
+.modal .x{position:absolute;top:14px;right:16px;border:0;background:#eef0f5;width:36px;height:36px;border-radius:50%;font-size:1.4rem;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:13px 22px;border-radius:99px;font-weight:600;z-index:200;animation:pop .2s}
+@keyframes fade{from{opacity:0}} @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}}
+
+/* scan */
+.scan{position:relative;border-radius:var(--r-m);overflow:hidden;max-width:260px;margin:18px auto}
+.scan::after{content:"";position:absolute;left:0;right:0;height:3px;background:var(--lime);box-shadow:0 0 18px 4px var(--lime);animation:scan 1.3s ease-in-out infinite alternate}
+@keyframes scan{from{top:0}to{top:calc(100% - 3px)}}
+
+/* footer */
+.ftr{background:var(--ink);color:#c9cde0;padding:48px 0;margin-top:40px}
+.ftr .wrap{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+.ftr .logo{color:#fff}
+
+@media(max-width:720px){
+  .sec{padding:56px 0}
+  .hdr .wrap{height:auto;padding:10px 0;flex-wrap:wrap;gap:8px}
+  .nav{order:3;width:100%;margin:0;justify-content:space-between}
+  .pts{margin-left:auto}
+  .tabs{overflow-x:auto}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+</style>
+<style>
+.head{padding:44px 0 0;display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.head h1{font-size:clamp(2.2rem,5vw,3.6rem)}
+.wallet{display:flex;gap:10px;flex-wrap:wrap}
+.wallet div{background:#fff;border-radius:var(--r-m);padding:10px 18px}
+.wallet b{font-family:var(--display);font-size:1.5rem;display:block;line-height:1.1}.wallet span{font-size:.78rem;color:var(--ink-3);font-weight:600}
+.stylist{background:var(--ink);color:#fff;border-radius:var(--r-l);padding:clamp(22px,4vw,38px);margin-top:30px}
+.stylist h2{font-size:clamp(1.5rem,3vw,2.1rem)}
+.stylist p{color:#c9cde0}
+.picker{display:flex;gap:12px;overflow-x:auto;padding:6px 4px 14px;margin:20px 0 6px;scroll-snap-type:x proximity}
+.pick{flex:0 0 108px;border:0;background:#1b2040;border-radius:var(--r-m);padding:7px;cursor:pointer;color:#fff;text-align:left;scroll-snap-align:start;font:600 .74rem var(--body)}
+.pick[aria-pressed=true]{background:var(--lime);color:var(--ink)}
+.pick .thumb{margin-bottom:6px}
+.pick span{display:block;line-height:1.2;min-height:2.4em}
+.s-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.results{margin-top:26px}
+.results:empty{display:none}
+.looks{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.lk{background:#fff;color:var(--ink);border-radius:var(--r-m);padding:16px;display:grid;gap:12px}
+.lk-row{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;align-items:start}
+.lk-row .cap{font-size:.74rem;font-weight:600;line-height:1.2;margin-top:5px}
+.lk-row .cap i{display:block;font-style:normal;color:var(--ink-3);font-weight:500}
+.lk .sc{display:flex;justify-content:space-between;align-items:center}
+.lk .sc b{font-family:var(--display);font-size:1.7rem;color:var(--cobalt)}
+.lk p{color:var(--ink-2)!important;font-size:.86rem}
+.shim{height:250px;border-radius:var(--r-m);background:linear-gradient(100deg,#1b2040 30%,#2a3160 50%,#1b2040 70%);background-size:200% 100%;animation:sh 1.1s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.shop{margin-top:56px}
+.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:20px 0}
+.filters .right{display:flex;gap:10px;flex-wrap:wrap}.filters select,.filters input{width:auto;min-width:150px}
+.p{display:flex;align-items:baseline;gap:8px}.p b{font-family:var(--display);font-size:1.3rem}.p s{color:var(--ink-3);font-size:.85rem}.p .off{margin-left:auto}
+.pair{background:#dfe4ff;border-radius:var(--r-s);padding:6px 10px;font-size:.76rem;font-weight:600;color:#1f33c4;display:flex;gap:6px;align-items:center;margin:0 6px}
+.pair img,.pair svg{width:22px;height:26px;border-radius:4px;flex:none;object-fit:cover}
+.rw{margin-top:70px;scroll-margin-top:90px}
+.rw-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:24px;margin-top:22px}
+.vcard{display:flex;gap:16px;align-items:center;border-radius:var(--r-m);padding:16px 18px;margin-bottom:10px}
+.vcard .mk{width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,.22);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:1.1rem;flex:none}
+.vcard .info{flex:1}.vcard b{display:block}
+.vcard .btn{background:#fff;color:var(--ink)}.vcard .btn:hover{background:var(--lime)}
+.code{font-family:ui-monospace,Menlo,monospace;background:rgba(255,255,255,.25);padding:3px 9px;border-radius:6px;font-size:.82rem;letter-spacing:.08em}
+.row{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.row .thumb{width:54px;flex:none}.row .t{flex:1;font-weight:600;font-size:.92rem}
+.dim{opacity:.55}
+@media(max-width:860px){.rw-grid{grid-template-columns:1fr}}
+
+#devPanel{position:fixed;left:16px;bottom:16px;z-index:150;width:250px;background:var(--ink);color:#fff;border-radius:var(--r-m);padding:12px 14px;display:grid;gap:10px;box-shadow:0 10px 30px rgba(16,20,38,.35);font-size:.85rem}
+#devPanel .dv-h{display:flex;align-items:center;gap:10px}
+#devPanel .dv-h>b{background:var(--lime);color:var(--ink);padding:2px 8px;border-radius:6px;font-size:.72rem;letter-spacing:.08em}
+#devPanel .dv-h span{margin-left:auto}
+#devPanel #dvX{border:0;background:none;color:#fff;font-size:1.3rem;cursor:pointer;line-height:1}
+#devPanel .dv-r{display:flex;gap:6px;flex-wrap:wrap}
+#devPanel input{flex:1;min-width:0;padding:7px 10px}
+#devPanel .btn.ghost{color:#fff;box-shadow:inset 0 0 0 1.5px #5a6285}
+#devPanel .btn.ghost:hover{background:#fff;color:var(--ink)}
+
+</style>
+</head>
+<body>
+<div id="hdr"></div>
+<main class="wrap" style="padding-bottom:60px">
+  <div class="head">
+    <div><h1>Campus thrift</h1><p class="muted" style="margin-top:8px">Clothes donated by NTU students, priced for students.</p></div>
+    <div class="wallet"><div><b id="wPts">0</b><span>points</span></div><div><b id="wCr">$0</b><span>store credit</span></div>
+      <button class="btn dark" id="cartBtn" style="align-self:stretch">Cart (<span id="cartN">0</span>)</button></div>
+  </div>
+
+  <!-- AI STYLIST -->
+  <section class="stylist" aria-labelledby="sty">
+    <h2 id="sty">AI stylist: match campus pieces to your closet</h2>
+    <p style="margin-top:8px;max-width:60ch">Choose something you own. The stylist searches every donated item and builds complete looks around it.</p>
+    <div class="picker" id="picker" role="group" aria-label="Choose a piece from your wardrobe"></div>
+    <div class="s-actions"><button class="btn lime" id="gen">Generate looks</button><a class="btn ghost" style="color:#fff;box-shadow:inset 0 0 0 2px #fff" href="wardrobe.html">Add more to my wardrobe</a></div>
+    <div class="results" id="results" aria-live="polite"></div>
+  </section>
+
+  <!-- CATALOG -->
+  <section class="shop" aria-labelledby="cat-h">
+    <h2 id="cat-h">The Campus Wardrobe</h2>
+    <div class="filters">
+      <div class="chips" id="cats" role="group" aria-label="Category"></div>
+      <div class="right">
+        <input type="search" id="q" placeholder="Search" aria-label="Search donated clothes">
+        <select id="size" aria-label="Size"><option value="">All sizes</option><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+        <select id="sort" aria-label="Sort"><option value="best">Best match for my closet</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select>
+      </div>
+    </div>
+    <div class="grid" id="shop"></div>
+  </section>
+
+  <!-- REWARDS -->
+  <section class="rw" id="rewards" aria-labelledby="rw-h">
+    <h2 id="rw-h">Points and rewards</h2>
+    <p class="muted" style="margin-top:8px">Earn 40 points for each donation. Spend them on credit or campus food.</p>
+    <div class="rw-grid">
+      <div class="card">
+        <h3>Convert to store credit</h3>
+        <p class="small muted" style="margin:6px 0 16px">10 points = $1 off in the Campus Wardrobe.</p>
+        <div class="chips" id="conv"></div>
+        <h3 style="margin-top:28px">Your vouchers</h3><div id="myV" style="margin-top:10px"></div>
+      </div>
+      <div><div id="vList"></div></div>
+    </div>
+  </section>
+</main>
+<div id="ftr"></div>
+<script>
+/* ===== Shared logic: data, styling engine, illustrations, UI helpers ===== */
+/* WA9Re: — shared logic: data, styling engine, garment illustrations, UI helpers */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const store={
+  get(k,d){try{const v=localStorage.getItem('tl_'+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('tl_'+k,JSON.stringify(v))}catch(e){toast('Storage is full. Remove a photo item to add more.')}}
+};
+
+/* ---------- constants ---------- */
+const CATS=['Tops','Pants','Skirts','Shoes','Accessories'];
+const PALETTE={Black:'#23242b',White:'#f5f4f0',Cream:'#ebe0c9',Grey:'#8e9099',Tan:'#bd9266',Brown:'#6b4b37',Navy:'#25375e',Denim:'#5b80ab',
+  Red:'#c23b32',Burgundy:'#6e1f30',Pink:'#e6a5b4',Mustard:'#d4a52f',Olive:'#6b7342',Sage:'#9bb08d'};
+const NEUTRAL=['Black','White','Cream','Grey','Tan','Brown','Navy','Denim'];
+const STYLES=['casual','smart','street','sporty'];
+const PTS_PER_DONATION=40, PTS_PER_DOLLAR=10;
+
+/* ---------- seed data ---------- */
+const SEED_WARDROBE=[
+ {id:'w1',name:'White classic tee',cat:'Tops',color:'White',tags:['casual','street']},
+ {id:'w2',name:'Navy oxford shirt',cat:'Tops',color:'Navy',tags:['smart','casual']},
+ {id:'w3',name:'Straight denim jeans',cat:'Pants',color:'Denim',tags:['casual','street']},
+ {id:'w4',name:'Black pleated skirt',cat:'Skirts',color:'Black',tags:['smart']},
+ {id:'w5',name:'White court sneakers',cat:'Shoes',color:'White',tags:['casual','street','sporty']},
+ {id:'w6',name:'Tan canvas tote',cat:'Accessories',color:'Tan',tags:['casual']}
+];
+const CATALOG=[
+ {id:'d1',name:'Olive cargo pants',cat:'Pants',color:'Olive',size:'M',price:14,orig:52,cond:'Like new',tags:['street','casual'],donor:'Hall 11'},
+ {id:'d2',name:'Sage ribbed knit top',cat:'Tops',color:'Sage',size:'S',price:8,orig:29,cond:'Good',tags:['casual','smart'],donor:'Alumni drive'},
+ {id:'d3',name:'Burgundy satin slip skirt',cat:'Skirts',color:'Burgundy',size:'S',price:12,orig:46,cond:'Like new',tags:['smart'],donor:'Hall 4'},
+ {id:'d4',name:'Mustard knit cardigan',cat:'Tops',color:'Mustard',size:'M',price:11,orig:40,cond:'Good',tags:['casual','smart'],donor:'NIE student'},
+ {id:'d5',name:'Black chelsea boots',cat:'Shoes',color:'Black',size:'M',price:22,orig:89,cond:'Good',tags:['smart','street'],donor:'Hall 8'},
+ {id:'d6',name:'Cream linen shirt',cat:'Tops',color:'Cream',size:'L',price:9,orig:35,cond:'Like new',tags:['smart','casual'],donor:'Hall 2'},
+ {id:'d7',name:'Pink satin mini skirt',cat:'Skirts',color:'Pink',size:'XS',price:7,orig:26,cond:'Good',tags:['street'],donor:'Hall 4'},
+ {id:'d8',name:'Brown leather belt bag',cat:'Accessories',color:'Brown',size:'One size',price:10,orig:38,cond:'Well loved',tags:['street','casual'],donor:'Hall 11'},
+ {id:'d9',name:'Grey tech joggers',cat:'Pants',color:'Grey',size:'L',price:10,orig:45,cond:'Good',tags:['sporty','casual'],donor:'Sports club drive'},
+ {id:'d10',name:'Red oversized graphic tee',cat:'Tops',color:'Red',size:'L',price:6,orig:24,cond:'Good',tags:['street','casual'],donor:'Hall 8'},
+ {id:'d11',name:'Denim A-line mini skirt',cat:'Skirts',color:'Denim',size:'M',price:9,orig:34,cond:'Like new',tags:['casual','street'],donor:'Hall 2'},
+ {id:'d12',name:'Tan suede loafers',cat:'Shoes',color:'Tan',size:'S',price:18,orig:70,cond:'Good',tags:['smart','casual'],donor:'Alumni drive'},
+ {id:'d13',name:'Burgundy ribbed beanie',cat:'Accessories',color:'Burgundy',size:'One size',price:4,orig:15,cond:'Like new',tags:['street','casual'],donor:'Hall 4'},
+ {id:'d14',name:'Black crossbody bag',cat:'Accessories',color:'Black',size:'One size',price:12,orig:48,cond:'Like new',tags:['smart','street'],donor:'NIE student'},
+ {id:'d15',name:'White pleated tennis skirt',cat:'Skirts',color:'White',size:'S',price:8,orig:32,cond:'Like new',tags:['sporty','casual'],donor:'Sports club drive'},
+ {id:'d16',name:'Navy tailored chinos',cat:'Pants',color:'Navy',size:'M',price:13,orig:55,cond:'Good',tags:['smart'],donor:'Hall 11'}
+];
+const FRIENDS=[
+ {id:'f1',name:'Aisha Rahman',hall:'Hall 4',color:'#ffd9e2',items:[
+   {name:'Burgundy wrap top',cat:'Tops',color:'Burgundy',tags:['smart']},{name:'Wide-leg black trousers',cat:'Pants',color:'Black',tags:['smart']},
+   {name:'Cream pleated midi skirt',cat:'Skirts',color:'Cream',tags:['smart','casual']},{name:'Tan block loafers',cat:'Shoes',color:'Tan',tags:['smart']}]},
+ {id:'f2',name:'Marcus Tan',hall:'Hall 11',color:'#cdeee0',items:[
+   {name:'Olive overshirt',cat:'Tops',color:'Olive',tags:['street','casual']},{name:'Grey sweat shorts',cat:'Pants',color:'Grey',tags:['sporty']},
+   {name:'Black high-top trainers',cat:'Shoes',color:'Black',tags:['street','sporty']},{name:'Navy bucket hat',cat:'Accessories',color:'Navy',tags:['street']}]},
+ {id:'f3',name:'Wei Ling Koh',hall:'Hall 8',color:'#dfe4ff',items:[
+   {name:'Mustard knit vest',cat:'Tops',color:'Mustard',tags:['casual']},{name:'Pink satin skirt',cat:'Skirts',color:'Pink',tags:['street']},
+   {name:'White canvas sneakers',cat:'Shoes',color:'White',tags:['casual']},{name:'Black mini backpack',cat:'Accessories',color:'Black',tags:['street','sporty']}]}
+];
+FRIENDS.forEach(f=>f.items.forEach((it,i)=>{it.id=f.id+'-'+i;it.owner=f.id}));
+const VOUCHERS=[
+ {id:'ft',brand:"NTU Food Truck",deal:'$3 off any meal',cost:150,bg:'#ff6b3d',fg:'#fff',mark:'FT'},
+ {id:'sa',brand:'Summer Acai',deal:'$2 off + free topping',cost:120,bg:'#5b2a86',fg:'#fff',mark:'SA'},
+ {id:'lt',brand:"Let's Toast",deal:'$3 off a toast set',cost:100,bg:'#f2c14e',fg:'#101426',mark:'LT'}
+];
+
+/* ---------- state ---------- */
+const S={
+  wardrobe(){let w=store.get('wardrobe',null);if(!w){w=SEED_WARDROBE;store.set('wardrobe',w)}return w},
+  setWardrobe(w){store.set('wardrobe',w)},
+  points(){return store.get('points',120)}, setPoints(n){store.set('points',n);updatePts()},
+  credit(){return store.get('credit',0)}, setCredit(n){store.set('credit',Math.round(n*100)/100)},
+  donated(){return store.get('donated',[])}, cart(){return store.get('cart',[])}, setCart(c){store.set('cart',c)},
+  sold(){return store.get('sold',[])}, requests(){return store.get('requests',[])},
+  vouchers(){return store.get('vouchers',[])},
+  catalog(){return CATALOG.concat(S.donated()).filter(i=>!S.sold().includes(i.id))}
+};
+
+/* ---------- colour & styling engine ---------- */
+const hexRgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function hue(h){let[r,g,b]=hexRgb(h).map(v=>v/255);const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(!d)return 0;
+  let x=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;return(x*60+360)%360}
+const hueDist=(a,b)=>{const d=Math.abs(hue(PALETTE[a])-hue(PALETTE[b]));return d>180?360-d:d};
+function shade(h,amt){return'#'+hexRgb(h).map(v=>Math.max(0,Math.min(255,v+amt)).toString(16).padStart(2,'0')).join('')}
+function nearestColor(r,g,b){let best='Grey',bd=1e9;for(const[n,h]of Object.entries(PALETTE)){const[R,G,B]=hexRgb(h);const d=(R-r)**2+(G-g)**2+(B-b)**2;if(d<bd){bd=d;best=n}}return best}
+
+function colorRel(a,b){
+  if(a===b)return{s:.74,k:'tonal'};
+  const na=NEUTRAL.includes(a),nb=NEUTRAL.includes(b);
+  if(na&&nb){const clash=[a,b].sort().join()==='Black,Brown'||[a,b].sort().join()==='Black,Navy';return{s:clash?.55:.88,k:'neutral'}}
+  if(na||nb)return{s:.92,k:'neutral'};
+  const d=hueDist(a,b);
+  if(d<35)return{s:.82,k:'analogous'}; if(d>140)return{s:.9,k:'complementary'}; return{s:.5,k:'contrast'};
+}
+function pairScore(a,b){
+  const rel=colorRel(a.color,b.color), shared=a.tags.filter(t=>b.tags.includes(t)).length/Math.min(a.tags.length,b.tags.length);
+  return{score:Math.max(52,Math.min(98,Math.round(40+45*rel.s+15*shared))),rel:rel.k,shared:shared>0};
+}
+function reason(a,b,p){
+  const A=a.color.toLowerCase(),B=b.color.toLowerCase(),nb=b.name.toLowerCase();
+  const t={
+    neutral:NEUTRAL.includes(a.color)&&NEUTRAL.includes(b.color)?`Two grounded neutrals. Easy to wear, and the ${B} adds depth without noise.`:`A neutral base lets the ${NEUTRAL.includes(a.color)?B:A} do the talking.`,
+    tonal:`Matching ${A} tones for a clean, head-to-toe look.`,
+    analogous:`${a.color} and ${b.color} sit next to each other on the colour wheel, so they blend softly.`,
+    complementary:`${a.color} against ${b.color} is a confident contrast that still reads balanced.`,
+    contrast:`A bolder mix. Keep the rest of the outfit neutral to let it work.`
+  }[p.rel];
+  return t+(p.shared?' Same vibe too.':'');
+}
+const COMP={Tops:['Pants','Skirts','Shoes','Accessories'],Pants:['Tops','Shoes','Accessories'],Skirts:['Tops','Shoes','Accessories'],Shoes:['Tops','Pants','Skirts'],Accessories:['Tops','Pants','Skirts']};
+function recommend(anchor,pool,n=3){
+  return pool.filter(p=>p.id!==anchor.id&&COMP[anchor.cat].includes(p.cat))
+    .map(p=>({item:p,...pairScore(anchor,p)})).map(r=>({...r,why:reason(anchor,r.item,r)})).sort((a,b)=>b.score-a.score).slice(0,n);
+}
+function buildLooks(anchor,pool,count=3){
+  const slots={Tops:[['Pants','Skirts'],['Shoes']],Pants:[['Tops'],['Shoes']],Skirts:[['Tops'],['Shoes']],Shoes:[['Tops'],['Pants','Skirts']],Accessories:[['Tops'],['Pants','Skirts']]}[anchor.cat];
+  const ranked=slots.map(cs=>pool.filter(p=>cs.includes(p.cat)&&p.id!==anchor.id).map(p=>({item:p,...pairScore(anchor,p)})).sort((a,b)=>b.score-a.score));
+  const looks=[];
+  for(let i=0;i<count;i++){
+    const parts=ranked.map(r=>r.length?r[i%r.length]:null).filter(Boolean);
+    if(!parts.length)break;
+    const dup=looks.some(l=>l.parts.map(p=>p.item.id).join()===parts.map(p=>p.item.id).join()); if(dup)continue;
+    looks.push({parts,score:Math.round(parts.reduce((s,p)=>s+p.score,0)/parts.length)});
+  }
+  return looks;
+}
+function buildOutfits(items,count=3){
+  const by=c=>items.filter(i=>i.cat===c), bottoms=by('Pants').concat(by('Skirts')), out=[];
+  for(const t of by('Tops'))for(const b of bottoms)for(const s of (by('Shoes').length?by('Shoes'):[null])){
+    const parts=[t,b,s].filter(Boolean);let sc=pairScore(t,b).score;if(s)sc=(sc+pairScore(b,s).score+pairScore(t,s).score)/3;
+    const acc=by('Accessories');if(acc.length){const a=acc[Math.floor(Math.random()*acc.length)];parts.push(a);sc=(sc*3+pairScore(t,a).score)/4}
+    out.push({parts,score:Math.round(sc),sort:sc+Math.random()*9});
+  }
+  return out.sort((a,b)=>b.sort-a.sort).slice(0,count);
+}
+
+/* ---------- garment images (photos in /images) ---------- */
+const IMG_DIR='images/';
+const placeholder=cat=>IMG_DIR+'placeholder-'+cat.toLowerCase()+'.jpg';
+const imgOf=it=>it.img||(it.id?IMG_DIR+'items/'+it.id+'.jpg':placeholder(it.cat));
+const thumb=it=>`<div class="thumb"><img src="${imgOf(it)}" alt="${esc(it.name)}" loading="lazy" onerror="this.onerror=null;this.src='${placeholder(it.cat)}'"></div>`;
+const hanger=()=>`<svg viewBox="0 0 80 36" width="64" aria-hidden="true"><path d="M40 4Q46 4 46 10Q46 15 40 18L40 22M40 22 6 32Q2 34 8 34H72Q78 34 74 32Z" fill="none" stroke="#101426" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const ptsIcon=`<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="#101426"/><path d="M6 10.5l3 3 5-7" fill="none" stroke="#d6f33f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/* ---------- UI helpers ---------- */
+function toast(msg){$('.toast')?.remove();const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=msg;document.body.append(t);setTimeout(()=>t.remove(),2800)}
+function modal(html,wide){
+  const o=document.createElement('div');o.className='overlay';
+  o.innerHTML=`<div class="modal${wide?' wide':''}" role="dialog" aria-modal="true"><button class="x" aria-label="Close">&times;</button><div class="mb">${html}</div></div>`;
+  const close=()=>{o.remove();document.removeEventListener('keydown',esck)};
+  const esck=e=>{if(e.key==='Escape')close()};
+  o.addEventListener('click',e=>{if(e.target===o||e.target.closest('.x'))close()});
+  document.addEventListener('keydown',esck);document.body.append(o);o.querySelector('.x').focus();
+  return{el:o,body:o.querySelector('.mb'),close};
+}
+function updatePts(){const p=$('#ptsVal');if(p)p.textContent=S.points()}
+
+/* ===== DEV MODE: adjust demo points. Enable with ?dev=1 (disable ?dev=0) or toggle with Ctrl+Shift+D ===== */
+(function devMode(){
+  const q=new URLSearchParams(location.search);
+  if(q.get('dev')==='1')store.set('dev',true);
+  if(q.get('dev')==='0')store.set('dev',false);
+  const sync=()=>{updatePts();if(typeof wallet==='function'){wallet();renderRewards()}const v=$('#devPts');if(v)v.textContent=S.points();const i=$('#dvIn');if(i)i.value=S.points()};
+  const setP=n=>{S.setPoints(Math.max(0,Math.round(+n)||0));sync()};
+  function build(){
+    $('#devPanel')?.remove();
+    if(!store.get('dev',false))return;
+    const d=document.createElement('aside');d.id='devPanel';d.setAttribute('aria-label','Developer tools');
+    d.innerHTML=`<div class="dv-h"><b>DEV</b><span>Points: <b id="devPts">${S.points()}</b></span><button id="dvX" aria-label="Hide dev panel">&times;</button></div>
+      <div class="dv-r"><input type="number" id="dvIn" min="0" step="10" value="${S.points()}" aria-label="Set points to"><button class="btn sm" id="dvSet">Set</button></div>
+      <div class="dv-r"><button class="btn ghost sm" data-d="-50">-50</button><button class="btn ghost sm" data-d="50">+50</button><button class="btn ghost sm" data-d="500">+500</button></div>
+      <div class="dv-r"><button class="btn ghost sm" id="dvQuiz">Retake quiz</button><button class="btn ghost sm" id="dvReset">Reset all data</button></div>`;
+    document.body.append(d);
+    $('#dvSet',d).onclick=()=>setP($('#dvIn',d).value);
+    $('#dvIn',d).onkeydown=e=>{if(e.key==='Enter')setP(e.target.value)};
+    $$('[data-d]',d).forEach(b=>b.onclick=()=>setP(S.points()+ +b.dataset.d));
+    $('#dvX',d).onclick=()=>{store.set('dev',false);build()};
+    $('#dvQuiz',d).onclick=()=>{localStorage.removeItem('tl_profile');localStorage.removeItem('tl_quizSeen');location.href='Homepage.html'};
+    $('#dvReset',d).onclick=()=>{if(!confirm('Clear all demo data (wardrobe, points, cart, requests)?'))return;Object.keys(localStorage).filter(k=>k.startsWith('tl_')&&k!=='tl_dev').forEach(k=>localStorage.removeItem(k));location.reload()};
+  }
+  document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='d'){e.preventDefault();store.set('dev',!store.get('dev',false));build()}});
+  build();
+})();
+
+function chrome(active){
+  const L=[['Homepage.html','Home'],['wardrobe.html','My wardrobe'],['thrift.html','Campus thrift']];
+  $('#hdr').outerHTML=`<header class="hdr"><div class="wrap">
+    <a class="logo" href="Homepage.html" aria-label="WA9Re: home"><a class="logo" href="Homepage.html" aria-label="WA9Re: home"><img src="./images/logo.png" alt="" width="34" height="34" style="border-radius:50%;object-fit:cover">WA9Re:</a>
+    <nav class="nav" aria-label="Main">${L.map(([h,t])=>`<a href="${h}"${h===active?' aria-current="page"':''}>${t}</a>`).join('')}</nav>
+    <a class="pts" href="thrift.html#rewards" title="Your points">${ptsIcon}<span><span id="ptsVal">${S.points()}</span> pts</span></a></div></header>`;
+  $('#ftr').outerHTML=`<footer class="ftr"><div class="wrap"><a class="logo" href="Homepage.html">WA9Re:</a>
+    <p class="small">Wear it, swap it, donate it. A campus wardrobe for NTU. This is a Prototype: your data stays in this browser.</p></div></footer>`;
+}
+
+
+/* ===== Page logic ===== */
+chrome('thrift.html');
+let W=S.wardrobe(), cat='All', anchorId=W[0]?.id, shown=false;
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+const bestFor=it=>{const r=recommend(it,W,1)[0];return r};
+
+function wallet(){$('#wPts').textContent=S.points();$('#wCr').textContent='$'+S.credit().toFixed(2).replace(/\.00$/,'');$('#cartN').textContent=S.cart().length;updatePts()}
+
+/* ---------- stylist ---------- */
+function renderPicker(){
+  if(!W.length){$('#picker').innerHTML=`<p>Your wardrobe is empty. <a href="wardrobe.html" style="color:var(--lime)">Add a piece</a> to get matches.</p>`;$('#gen').disabled=true;return}
+  $('#picker').innerHTML=W.map(i=>`<button class="pick" data-id="${i.id}" aria-pressed="${i.id===anchorId}">${thumb(i)}<span>${esc(i.name)}</span></button>`).join('');
+  $$('.pick').forEach(b=>b.onclick=()=>{anchorId=b.dataset.id;renderPicker()});
+}
+async function generate(){
+  const a=W.find(i=>i.id===anchorId);if(!a)return;
+  const res=$('#results');res.innerHTML=`<div class="looks"><div class="shim"></div><div class="shim"></div><div class="shim"></div></div>`;
+  res.scrollIntoView({behavior:'smooth',block:'nearest'});await delay(1100);
+  const looks=buildLooks(a,S.catalog(),3);
+  if(!looks.length){res.innerHTML=`<p>No donated pieces pair with this yet. New donations arrive weekly.</p>`;return}
+  res.innerHTML=`<h3 style="margin-bottom:14px;color:#fff">${looks.length} looks built around your ${esc(a.name.toLowerCase())}</h3><div class="looks">${looks.map((l,n)=>{
+    const total=l.parts.reduce((s,p)=>s+p.item.price,0);
+    return`<article class="lk"><div class="lk-row"><div>${thumb(a)}<div class="cap">${esc(a.name)}<i>In your closet</i></div></div>${l.parts.map(p=>`<div>${thumb(p.item)}<div class="cap">${esc(p.item.name)}<i>$${p.item.price}</i></div></div>`).join('')}</div>
+    <div class="sc"><b>${l.score}% match</b><span class="tag blue">Look ${n+1}</span></div><p>${esc(reason(a,l.parts[0].item,l.parts[0]))}</p>
+    <button class="btn sm" data-look="${l.parts.map(p=>p.item.id).join(',')}">Add ${l.parts.length>1?'all '+l.parts.length+' pieces':'piece'} to cart ($${total})</button></article>`}).join('')}</div>`;
+  $$('[data-look]',res).forEach(b=>b.onclick=()=>b.dataset.look.split(',').forEach(id=>addCart(id,true)));
+}
+$('#gen').onclick=generate;
+
+/* ---------- catalog ---------- */
+function renderCats(){
+  const all=S.catalog();
+  $('#cats').innerHTML=['All',...CATS].map(c=>`<button class="chip" data-c="${c}" aria-pressed="${c===cat}">${c} (${c==='All'?all.length:all.filter(i=>i.cat===c).length})</button>`).join('');
+  $$('#cats .chip').forEach(b=>b.onclick=()=>{cat=b.dataset.c;renderShop();renderCats()});
+}
+function renderShop(){
+  const q=$('#q').value.trim().toLowerCase(),sz=$('#size').value,sort=$('#sort').value,cart=S.cart();
+  let list=S.catalog().filter(i=>(cat==='All'||i.cat===cat)&&(!sz||i.size===sz||i.size==='One size')&&(!q||(i.name+i.color).toLowerCase().includes(q)))
+    .map(i=>({i,m:W.length?W.map(w=>({w,...pairScore(w,i)})).filter(x=>COMP[x.w.cat].includes(i.cat)).sort((a,b)=>b.score-a.score)[0]:null}));
+  if(sort==='low')list.sort((a,b)=>a.i.price-b.i.price);else if(sort==='high')list.sort((a,b)=>b.i.price-a.i.price);else list.sort((a,b)=>(b.m?.score||0)-(a.m?.score||0));
+  $('#shop').innerHTML=list.length?list.map(({i,m})=>`<article class="item">${i.donor==='You'?'<span class="tag lime badge">Donated by you</span>':`<span class="tag badge">${i.cond}</span>`}${thumb(i)}
+   <div class="meta"><h3>${esc(i.name)}</h3><div class="sub">${i.color}, size ${i.size}, from ${esc(i.donor)}</div>
+   <div class="p" style="margin-top:6px"><b>$${i.price}</b><s>$${i.orig}</s><span class="tag pink off">${Math.round(100-i.price/i.orig*100)}% off</span></div></div>
+   ${m?`<div class="pair" title="${m.score}% match"><img src="${imgOf(m.w)}" alt="" onerror="this.onerror=null;this.src='${placeholder(m.w.cat)}'"><span>Pairs with your ${esc(m.w.name.toLowerCase())} · ${m.score}%</span></div>`:''}
+   <div class="acts"><button class="btn sm" data-add="${i.id}"${cart.includes(i.id)?' disabled':''}>${cart.includes(i.id)?'In cart':'Add to cart'}</button><button class="btn ghost sm" data-sty="${i.id}">Style it</button></div></article>`).join('')
+   :`<div class="card" style="grid-column:1/-1;text-align:center"><h3>Nothing matches those filters</h3><p class="muted small" style="margin:6px auto 0">Try another size or category.</p></div>`;
+  $$('[data-add]').forEach(b=>b.onclick=()=>addCart(b.dataset.add));
+  $$('[data-sty]').forEach(b=>b.onclick=()=>styleIt(S.catalog().find(i=>i.id===b.dataset.sty)));
+}
+['q','size','sort'].forEach(id=>$('#'+id).addEventListener('input',renderShop));
+
+function styleIt(it){
+  const recs=recommend(it,W,3);
+  const m=modal(`<h2 style="font-size:1.6rem">Style the ${esc(it.name.toLowerCase())}</h2>
+   ${recs.length?`<p class="muted" style="margin:6px 0 18px">Best matches from your wardrobe:</p>${recs.map(r=>`<div class="row">${thumb(r.item)}<div class="t">${esc(r.item.name)}<div class="small muted" style="font-weight:500">${esc(r.why)}</div></div><span class="tag blue">${r.score}%</span></div>`).join('')}`
+   :`<p class="muted" style="margin:10px 0">Add pieces to your wardrobe and the stylist will show what this pairs with.</p>`}
+   <div style="display:flex;gap:10px;margin-top:22px">${S.cart().includes(it.id)?'':`<button class="btn" id="mAdd">Add to cart ($${it.price})</button>`}<a class="btn ghost" href="wardrobe.html">My wardrobe</a></div>`);
+  $('#mAdd',m.body)&&($('#mAdd',m.body).onclick=()=>{addCart(it.id);m.close()});
+}
+
+/* ---------- cart ---------- */
+function addCart(id,quiet){const c=S.cart();if(!c.includes(id)){S.setCart(c.concat(id));if(!quiet)toast('Added to cart')}else if(quiet)return;wallet();renderShop();if(quiet)toast('Look added to cart')}
+$('#cartBtn').onclick=openCart;
+function openCart(){
+  const items=S.cart().map(id=>S.catalog().find(i=>i.id===id)).filter(Boolean),total=items.reduce((s,i)=>s+i.price,0),use=Math.min(S.credit(),total);
+  const m=modal(`<h2 style="font-size:1.6rem;margin-bottom:10px">Your cart</h2>${items.length?items.map(i=>`<div class="row">${thumb(i)}<div class="t">${esc(i.name)}<div class="small muted" style="font-weight:500">Size ${i.size}</div></div><b>$${i.price}</b><button class="btn ghost sm" data-rm="${i.id}" aria-label="Remove ${esc(i.name)}">Remove</button></div>`).join('')
+   +`<div style="margin:18px 0;display:grid;gap:6px"><div style="display:flex;justify-content:space-between"><span>Subtotal</span><b>$${total}</b></div><div style="display:flex;justify-content:space-between"><span>Store credit applied</span><b>-$${use.toFixed(2).replace(/\.00$/,'')}</b></div><div style="display:flex;justify-content:space-between;font-size:1.15rem"><span>Pay at campus pickup</span><b>$${(total-use).toFixed(2).replace(/\.00$/,'')}</b></div></div><button class="btn" id="co" style="width:100%">Reserve for pickup</button>`
+   :`<p class="muted" style="margin:14px 0">Your cart is empty. Browse the Campus Wardrobe or ask the stylist for looks.</p>`}`);
+  $$('[data-rm]',m.body).forEach(b=>b.onclick=()=>{S.setCart(S.cart().filter(x=>x!==b.dataset.rm));wallet();renderShop();m.close();openCart()});
+  $('#co',m.body)&&($('#co',m.body).onclick=()=>{S.setCredit(S.credit()-use);store.set('sold',S.sold().concat(items.map(i=>i.id)));S.setCart([]);wallet();renderCats();renderShop();m.close();toast('Reserved. Collect at the campus pickup point.')});
+}
+
+/* ---------- rewards ---------- */
+function renderRewards(){
+  const p=S.points();
+  $('#conv').innerHTML=[50,100,200].map(n=>`<button class="btn ${p>=n?'dark':'ghost'} sm" data-cv="${n}"${p<n?' disabled':''}>${n} pts = $${n/PTS_PER_DOLLAR}</button>`).join('')+(p>=PTS_PER_DOLLAR?`<button class="btn lime sm" data-cv="${Math.floor(p/PTS_PER_DOLLAR)*PTS_PER_DOLLAR}">Convert all</button>`:'');
+  $$('[data-cv]').forEach(b=>b.onclick=()=>{const n=+b.dataset.cv;S.setPoints(S.points()-n);S.setCredit(S.credit()+n/PTS_PER_DOLLAR);wallet();renderRewards();toast(`Converted. $${n/PTS_PER_DOLLAR} store credit added`)});
+  $('#vList').innerHTML=VOUCHERS.map(v=>`<div class="vcard" style="background:${v.bg};color:${v.fg}"><div class="mk">${v.mark}</div><div class="info"><b>${v.brand}</b><span class="small">${v.deal}</span></div><button class="btn sm"${p<v.cost?' disabled':''} data-v="${v.id}">${v.cost} pts</button></div>`).join('');
+  $$('[data-v]').forEach(b=>b.onclick=()=>{const v=VOUCHERS.find(x=>x.id===b.dataset.v);if(S.points()<v.cost)return;
+    const code=v.mark+'-'+Math.random().toString(36).slice(2,8).toUpperCase();S.setPoints(S.points()-v.cost);store.set('vouchers',S.vouchers().concat([{...v,code}]));wallet();renderRewards();toast(v.brand+' voucher added')});
+  const mv=S.vouchers();
+  $('#myV').innerHTML=mv.length?mv.map(v=>`<div class="vcard" style="background:${v.bg};color:${v.fg};padding:12px 16px"><div class="mk" style="width:42px;height:42px;font-size:.9rem">${v.mark}</div><div class="info"><b>${v.brand}</b><span class="small">${v.deal}</span></div><span class="code">${v.code}</span></div>`).join('')
+    :`<p class="small muted">No vouchers yet. Redeem one on the right and show the code at the stall.</p>`;
+}
+
+wallet();renderPicker();renderCats();renderShop();renderRewards();
+</script>
+</body>
+</html>
