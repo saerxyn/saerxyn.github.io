@@ -390,7 +390,7 @@ function updatePts(){const p=$('#ptsVal');if(p)p.textContent=S.points()}
     $('#dvIn',d).onkeydown=e=>{if(e.key==='Enter')setP(e.target.value)};
     $$('[data-d]',d).forEach(b=>b.onclick=()=>setP(S.points()+ +b.dataset.d));
     $('#dvX',d).onclick=()=>{store.set('dev',false);build()};
-    $('#dvQuiz',d).onclick=()=>{localStorage.removeItem('tl_profile');localStorage.removeItem('tl_quizSeen');location.href='Homepage.html'};
+    $('#dvQuiz',d).onclick=()=>{localStorage.removeItem('tl_profile');localStorage.removeItem('tl_quizSeen');location.href='index.html'};
     $('#dvReset',d).onclick=()=>{if(!confirm('Clear all demo data (wardrobe, points, cart, requests)?'))return;Object.keys(localStorage).filter(k=>k.startsWith('tl_')&&k!=='tl_dev').forEach(k=>localStorage.removeItem(k));location.reload()};
   }
   document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='d'){e.preventDefault();store.set('dev',!store.get('dev',false));build()}});
@@ -398,12 +398,12 @@ function updatePts(){const p=$('#ptsVal');if(p)p.textContent=S.points()}
 })();
 
 function chrome(active){
-  const L=[['Homepage.html','Home'],['wardrobe.html','My wardrobe'],['thrift.html','Campus thrift']];
+  const L=[['index.html','Home'],['wardrobe.html','My wardrobe'],['thrift.html','Campus thrift']];
   $('#hdr').outerHTML=`<header class="hdr"><div class="wrap">
-    <a class="logo" href="Homepage.html" aria-label="WA9Re: home"><a class="logo" href="Homepage.html" aria-label="WA9Re: home"><img src="./images/logo.png" alt="" width="34" height="34" style="border-radius:50%;object-fit:cover">WA9Re:</a>
+    <a class="logo" href="index.html" aria-label="WA9Re: home"><a class="logo" href="index.html" aria-label="WA9Re: home"><img src="./images/logo.png" alt="" width="34" height="34" style="border-radius:50%;object-fit:cover">WA9Re:</a>
     <nav class="nav" aria-label="Main">${L.map(([h,t])=>`<a href="${h}"${h===active?' aria-current="page"':''}>${t}</a>`).join('')}</nav>
     <a class="pts" href="thrift.html#rewards" title="Your points">${ptsIcon}<span><span id="ptsVal">${S.points()}</span> pts</span></a></div></header>`;
-  $('#ftr').outerHTML=`<footer class="ftr"><div class="wrap"><a class="logo" href="Homepage.html">WA9Re:</a>
+  $('#ftr').outerHTML=`<footer class="ftr"><div class="wrap"><a class="logo" href="index.html">WA9Re:</a>
     <p class="small">Wear it, swap it, donate it. A campus wardrobe for NTU. This is a Prototype: your data stays in this browser.</p></div></footer>`;
 }
 
